@@ -3,6 +3,8 @@
 GameScene::GameScene()
 {
 	// Register and add game objects on constructor
+	player = new Player();
+	this->addGameObject(player);
 }
 
 GameScene::~GameScene()

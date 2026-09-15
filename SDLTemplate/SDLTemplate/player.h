@@ -27,7 +27,9 @@ private:
 	int boostedSpeed;
 
 	float reloadTime;
+	float altreloadTime;
 	float currentReloadTime;
+	float altcurrentReloadTime;
 
 	std::vector<Bullet*> bullets;
 };

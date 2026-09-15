@@ -17,7 +17,7 @@ void Player::start()
 	// Load texture
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("gfx/player.png");
-	sound = SoundManager::loadSound("sound/shoot.mp3");
+	sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
 
 	// Initialize to avoid garbage values
 	x = 100;
@@ -29,8 +29,10 @@ void Player::start()
 	boostedSpeed = 10;
 	currentSpeed = defaultSpeed;
 
-	reloadTime = 0; // 0.16sec (8/60)
+	reloadTime = 8; // 0.16sec (8/60)
+	altreloadTime = 16;
 	currentReloadTime = 0;
+	altcurrentReloadTime = 0;
 
 	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
@@ -55,6 +57,11 @@ void Player::update()
 		currentReloadTime--;
 	}
 
+	if (altcurrentReloadTime > 0)
+	{
+		altcurrentReloadTime--;
+	}
+
 	if (app.keyboard[SDL_SCANCODE_F] && currentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
@@ -71,22 +78,32 @@ void Player::update()
 
 		currentReloadTime = reloadTime;
 	}
-	if (app.keyboard[SDL_SCANCODE_G] && currentReloadTime <= 0)
+
+	if (app.keyboard[SDL_SCANCODE_G] && altcurrentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
-		Bullet* bullet = new Bullet
-		(
-			x + width - 5,
-			y + (height / 2) - 5,
+		Bullet* bullet1 = new Bullet(
+			x + width + 5,
+			y + height - 5,
 			1,
 			0,
 			5
 		);
-		getScene()->addGameObject(bullet);
-		bullets.push_back(bullet);
+		Bullet* bullet2 = new Bullet(
+			x + width - 5,
+			y - 5,
+			1,
+			0,
+			5
+		);
+		getScene()->addGameObject(bullet1);
+		bullets.push_back(bullet1);
+		getScene()->addGameObject(bullet2);
+		bullets.push_back(bullet2);
 
-		currentReloadTime = reloadTime;
+		altcurrentReloadTime = altreloadTime;
 	}
+
 	if (app.keyboard[SDL_SCANCODE_LSHIFT])
 	{
 		currentSpeed = boostedSpeed;
