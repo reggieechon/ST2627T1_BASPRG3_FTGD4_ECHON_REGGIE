@@ -4,32 +4,35 @@
 #include "draw.h"
 #include "SoundManager.h"
 #include "Bullet.h"
+#include "player.h"
+#include "util.h"
 #include <vector>
 
-class Player : public GameObject
+class Enemy:
+	public GameObject
 {
 public:
-	~Player();
+	Enemy(Player* player);
+	~Enemy();
 	void start() override;
 	void update() override;
 	void draw() override;
-	bool getIsAlive();
-	void getDead();
-private:
-	SDL_Texture* texture;
-	int currentSpeed;
 
+private:
+
+	SDL_Texture* texture;
 	Mix_Chunk* sound;
 
-	bool isAlive;
-
-	int defaultSpeed;
-	int boostedSpeed;
+	int speed;
+	int directionX;
+	int directionY;
+	float diretionChangeTime;
+	float currentDirectionChaneTime;
 
 	float reloadTime;
-	float altreloadTime;
 	float currentReloadTime;
-	float altcurrentReloadTime;
 
 	std::vector<Bullet*> bullets;
+	Player* targetPlayer;
 };
+

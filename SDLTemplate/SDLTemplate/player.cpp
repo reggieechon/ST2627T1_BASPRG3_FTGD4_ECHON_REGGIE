@@ -18,6 +18,7 @@ void Player::start()
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("gfx/player.png");
 	sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
+	sound->volume = 64;
 
 	// Initialize to avoid garbage values
 	x = 100;
@@ -25,8 +26,10 @@ void Player::start()
 	width = 0;
 	height = 0;
 
+	isAlive = true;
+
 	defaultSpeed = 5;
-	boostedSpeed = 10;
+	boostedSpeed = 15;
 	currentSpeed = defaultSpeed;
 
 	reloadTime = 8; // 0.16sec (8/60)
@@ -42,7 +45,7 @@ void Player::update()
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		if (bullets[i]->GetX() > SCREEN_WIDTH)
+		if (bullets[i]->getX() > SCREEN_WIDTH)
 		{
 			Bullet* bulletToDelete = bullets[i];
 			bullets.erase(bullets.begin() + i);
@@ -62,6 +65,11 @@ void Player::update()
 		altcurrentReloadTime--;
 	}
 
+	if (!isAlive)
+	{
+		return;
+	}
+
 	if (app.keyboard[SDL_SCANCODE_F] && currentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
@@ -71,7 +79,8 @@ void Player::update()
 			y + (height / 2) - 5,
 			1,
 			0,
-			5
+			5,
+			Side::PLAYER_SIDE
 		);
 		getScene()->addGameObject(bullet);
 		bullets.push_back(bullet);
@@ -87,14 +96,16 @@ void Player::update()
 			y + height - 5,
 			1,
 			0,
-			5
+			5,
+			Side::PLAYER_SIDE
 		);
 		Bullet* bullet2 = new Bullet(
 			x + width - 5,
 			y - 5,
 			1,
 			0,
-			5
+			5,
+			Side::PLAYER_SIDE
 		);
 		getScene()->addGameObject(bullet1);
 		bullets.push_back(bullet1);
@@ -132,5 +143,18 @@ void Player::update()
 
 void Player::draw()
 {
-	blit(texture, x, y);
+	if(isAlive)
+	{
+		blit(texture, x, y);
+	}
+}
+
+bool Player::getIsAlive()
+{
+	return isAlive;
+}
+
+void Player::getDead()
+{
+	isAlive = false;
 }

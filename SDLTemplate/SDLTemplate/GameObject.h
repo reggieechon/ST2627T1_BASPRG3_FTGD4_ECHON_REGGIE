@@ -12,6 +12,18 @@ public:
 	virtual void start();
 	virtual void update();
 	virtual void draw();
+
+	int getX();
+	int getY();
+	int getWidth();
+	int getHeight();
+
+protected:
+	int x; 
+	int y;
+	int width;
+	int height;
+
 private:
 	// Scene where this object belongs to
 	Scene* parentScene;
