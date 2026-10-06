@@ -26,13 +26,12 @@ void Enemy::start()
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("gfx/enemy.png");
 	sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
-	sound->volume = 64;
+	sound->volume = 25;
 
 	// Initialize to avoid garbage values
-	x = 100;
-	y = 100;
-	width = 0;
-	height = 0;
+	width = 1000;
+	height = 300;
+	speed = 5;
 
 	directionX = -1;
 	directionY = 1;
@@ -51,12 +50,11 @@ void Enemy::update()
 {
 	for (int i = 0; i < bullets.size(); i++)
 	{
-		if (bullets[i]->getX() < SCREEN_WIDTH >  0)
+		if (bullets[i]->getX() < 0 || bullets[i]->getX() > SCREEN_WIDTH)
 		{
 			Bullet* bulletToDelete = bullets[i];
 			bullets.erase(bullets.begin() + i);
 			delete bulletToDelete;
-
 			break;
 		}
 	}
@@ -91,7 +89,7 @@ void Enemy::update()
 
 		calcSlope
 		(
-			targetPlayer->getX(), targetPlayer->getY(), x, y, &bulletDirectionX, &bulletDirectionY
+			targetPlayer->getX(), targetPlayer->getY(), x, y + (height / 2) - 5, &bulletDirectionX, &bulletDirectionY
 		);
 
 		SoundManager::playSound(sound);

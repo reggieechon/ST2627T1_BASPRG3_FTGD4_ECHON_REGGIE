@@ -4,28 +4,46 @@
 #include "player.h"
 #include "Enemy.h"
 #include "text.h"
+#include <vector> 
 
+struct Explosion 
+{
+    float x, y;
+    float timer;
+
+    Explosion(float posX, float posY) 
+    {
+        x = posX;
+        y = posY;
+        timer = 0.5f; 
+    }
+};
 class GameScene : public Scene
 {
 public:
-	GameScene();
-	~GameScene();
-	void start();
-	void draw();
-	void update();
+    GameScene();
+    ~GameScene();
+    void start();
+    void draw();
+    void update();
+
 private:
-	void doSpawnLogic();
-	void doCollisionsLogic();
+    void doSpawnLogic();
+    void doCollisionsLogic();
 
-	void spawnEnemy(int count);
-	void despawnEnemy(Enemy* enemy);
+    void spawnEnemy(int count);
+    void despawnEnemy(Enemy* enemy);
 
-	Player* player;
-	int points;
+    Player* player;
+    int points;
 
-	float spawnTime;
-	float currentSpawnTime;
+    float spawnTime;
+    float currentSpawnTime;
 
-	std::vector<Enemy*> enemies;
+    SDL_Texture* backgroundTexture;
+    SDL_Texture* explodeTexture;
+
+    std::vector<Enemy*> enemies;
+
+    std::vector<Explosion> activeExplosions;
 };
-

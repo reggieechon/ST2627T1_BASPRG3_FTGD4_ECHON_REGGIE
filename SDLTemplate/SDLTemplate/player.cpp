@@ -18,7 +18,7 @@ void Player::start()
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("gfx/player.png");
 	sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
-	sound->volume = 64;
+	sound->volume = 24;
 
 	// Initialize to avoid garbage values
 	x = 100;

@@ -4,7 +4,6 @@
 
 GameScene::GameScene()
 {
-	// Register and add game objects on constructor
 	player = new Player();
 	this->addGameObject(player);
 }
@@ -23,13 +22,32 @@ void GameScene::start()
 	spawnTime = 120;
 	currentSpawnTime = spawnTime;
 
-	spawnEnemy(3);
-	// Initialize any scene logic here
+	backgroundTexture = loadTexture("gfx/background.png");
+
+	explodeTexture = loadTexture("gfx/explosion.png"); 
+
+	if (backgroundTexture == nullptr || explodeTexture == nullptr)
+	{
+		std::cout << "ERROR LOADING TEXTURES" << std::endl;
+	}
+
+	spawnEnemy(2);
 }
 
 void GameScene::draw()
 {
+	if (backgroundTexture != nullptr)
+	{
+		SDL_Rect dest = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+		SDL_RenderCopy(app.renderer, backgroundTexture, nullptr, nullptr);
+	}
+
 	Scene::draw();
+
+	for (int i = 0; i < activeExplosions.size(); i++)
+	{
+		blit(explodeTexture, activeExplosions[i].x, activeExplosions[i].y);
+	}
 
 	drawText
 	(
@@ -56,6 +74,15 @@ void GameScene::update()
 	Scene::update();
 	doSpawnLogic();
 	doCollisionsLogic();
+
+	for (int i = activeExplosions.size() - 1; i >= 0; i--)
+	{
+		activeExplosions[i].timer -= 0.016f;
+		if (activeExplosions[i].timer <= 0.0f)
+		{
+			activeExplosions.erase(activeExplosions.begin() + i);
+		}
+	}
 }
 
 void GameScene::doSpawnLogic()
@@ -67,6 +94,7 @@ void GameScene::doSpawnLogic()
 	else
 	{
 		spawnEnemy(2);
+		currentSpawnTime = spawnTime;
 	}
 }
 
@@ -81,49 +109,33 @@ void GameScene::doCollisionsLogic()
 			{
 				int collision = checkCollision
 				(
-					bullet->getX(),
-					bullet->getY(),
-					bullet->getWidth(),
-					bullet->getHeight(),
-
-					player->getX(),
-					player->getY(),
-					player->getWidth(),
-					player->getHeight()
+					bullet->getX(), bullet->getY(), bullet->getWidth(), bullet->getHeight(),
+					player->getX(), player->getY(), player->getWidth(), player->getHeight()
 				);
 
 				if (collision == 1)
 				{
 					std::cout << "Player hit" << std::endl;
-
 					break;
 				}
 			}
 			else if (bullet->Getside() == Side::PLAYER_SIDE)
 			{
-				for (int i = 0; i < enemies.size(); i++)
+				for (int j = 0; j < enemies.size(); j++)
 				{
-					Enemy* enemy = enemies[i];
+					Enemy* enemy = enemies[j];
 
 					int collision = checkCollision
 					(
-						bullet->getX(),
-						bullet->getY(),
-						bullet->getWidth(),
-						bullet->getHeight(),
-
-						enemy->getX(),
-						enemy->getY(),
-						enemy->getWidth(),
-						enemy->getHeight()
+						bullet->getX(), bullet->getY(), bullet->getWidth(), bullet->getHeight(),
+						enemy->getX(), enemy->getY(), enemy->getWidth(), enemy->getHeight()
 					);
 
 					if (collision == 1)
 					{
 						despawnEnemy(enemy);
-						points + 1;
-						std::cout << "eney" << std::endl;
-
+						points++;
+						std::cout << "enemy" << std::endl;
 						break;
 					}
 				}
@@ -134,9 +146,15 @@ void GameScene::doCollisionsLogic()
 
 void GameScene::spawnEnemy(int count)
 {
+	int spacing = 60;
+	int startY = (SCREEN_HEIGHT / 2) - ((count * spacing) / 2);
+
 	for (int i = 0; i < count; i++)
 	{
-		Enemy* enemy = new Enemy(player);
+		int spawnX = SCREEN_WIDTH + 10;
+		int spawnY = startY + (i * spacing);
+
+		Enemy* enemy = new Enemy(player, spawnX, spawnY);
 		this->addGameObject(enemy);
 		enemies.push_back(enemy);
 	}
@@ -157,6 +175,8 @@ void GameScene::despawnEnemy(Enemy* enemy)
 
 	if (index >= 0)
 	{
+		activeExplosions.push_back({ enemy->getX(), enemy->getY() });
+
 		enemies.erase(enemies.begin() + index);
 		delete enemy;
 	}
