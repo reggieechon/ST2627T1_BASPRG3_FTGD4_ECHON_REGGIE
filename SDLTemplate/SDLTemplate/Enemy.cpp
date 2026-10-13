@@ -35,8 +35,8 @@ void Enemy::start()
 
 	directionX = -1;
 	directionY = 1;
-	diretionChangeTime = 120;
-	currentDirectionChaneTime = diretionChangeTime;
+	directionChangeTime = (rand() % 300) + 180;
+	currentDirectionChangeTime = 0;
 
 	reloadTime = 60;
 	currentReloadTime = 0;
@@ -59,15 +59,15 @@ void Enemy::update()
 		}
 	}
 
-	if (currentDirectionChaneTime > 0)
+	if (currentDirectionChangeTime > 0)
 	{
-		currentDirectionChaneTime--;
+		currentDirectionChangeTime--;
 	}
 	else
 	{
 		directionY = -directionY;
 
-		currentDirectionChaneTime = diretionChangeTime;
+		currentDirectionChangeTime = directionChangeTime;
 	}
 
 	if (y < 0 || y > SCREEN_HEIGHT - height)
@@ -109,6 +109,12 @@ void Enemy::update()
 		currentReloadTime = reloadTime;
 	}
 
+}
+
+void Enemy::setPosition(int xPos, int yPos)
+{
+	this->x = xPos;
+	this->y = xPos;
 }
 
 void Enemy::draw()

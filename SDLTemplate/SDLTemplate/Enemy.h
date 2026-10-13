@@ -12,27 +12,29 @@ class Enemy:
 	public GameObject
 {
 public:
-	Enemy(Player* player);
+	Enemy();
 	~Enemy();
 	void start() override;
 	void update() override;
 	void draw() override;
+	void setPlayerTarget(Player* player);
+	void setPosition(int xPos, int yPos);
 
 private:
 
 	SDL_Texture* texture;
 	Mix_Chunk* sound;
+	Player* targetPlayer;
 
 	int speed;
-	int directionX;
-	int directionY;
-	float diretionChangeTime;
-	float currentDirectionChaneTime;
+	float directionX;
+	float directionY;
+	float directionChangeTime;
+	float currentDirectionChangeTime;
 
 	float reloadTime;
 	float currentReloadTime;
 
 	std::vector<Bullet*> bullets;
-	Player* targetPlayer;
 };
 

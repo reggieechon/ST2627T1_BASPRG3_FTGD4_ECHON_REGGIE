@@ -35,6 +35,7 @@ private:
     void despawnEnemy(Enemy* enemy);
 
     Player* player;
+    Enemy* enemy;
     int points;
 
     float spawnTime;

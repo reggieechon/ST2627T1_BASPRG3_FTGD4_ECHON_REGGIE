@@ -1,11 +1,28 @@
 #include "GameScene.h"
 #include "util.h"
 #include "text.h"
+#include "Enemy.h"
 
 GameScene::GameScene()
 {
 	player = new Player();
 	this->addGameObject(player);
+
+	enemy = new Enemy();
+	this->addGameObject(enemy);
+
+	spawnTime = 300;
+	currentSpawnTime = spawnTime;
+
+	for (int i = 0; i < 3; i++)
+	{
+		Enemy* enemy = new Enemy();
+		this->addGameObject(enemy);
+		enemy->targetPlayer(player);
+
+		enemy->setPosition(1200, 300 + (rand() % 300));
+		spawnedEnemies.push_back(enemy);
+	}
 }
 
 GameScene::~GameScene()
@@ -18,9 +35,6 @@ void GameScene::start()
 	Scene::start();
 	initFonts();
 	points = 0;
-
-	spawnTime = 120;
-	currentSpawnTime = spawnTime;
 
 	backgroundTexture = loadTexture("gfx/background.png");
 
