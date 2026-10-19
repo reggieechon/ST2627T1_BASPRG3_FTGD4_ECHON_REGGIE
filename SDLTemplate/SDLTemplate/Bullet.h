@@ -12,7 +12,7 @@ enum class Side
 class Bullet : public GameObject
 {
 public:
-	Bullet(int positionX, int positionY, int directionX, int directionY, int speed, Side side);
+	Bullet(int positionX, int positionY, float directionX, float directionY, int speed, Side side);
 	void start() override;
 	void update() override;
 	void draw() override;

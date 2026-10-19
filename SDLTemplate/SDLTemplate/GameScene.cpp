@@ -7,9 +7,16 @@ GameScene::GameScene()
 {
 	player = new Player();
 	this->addGameObject(player);
+	SoundManager::loadMusic("music/BackgroundMusic.mp3");
 
-	spawnTime = 300;
+	spawnTime = 120;
 	currentSpawnTime = spawnTime;
+
+	powerUpSpawnTime = 480;
+
+	boss = nullptr;
+	bossesSpawned = 0;
+	powerUpSpawnTime = 300;
 }
 
 GameScene::~GameScene()
@@ -19,6 +26,7 @@ GameScene::~GameScene()
 
 void GameScene::start()
 {
+	SoundManager::playMusic(1);
 	Scene::start();
 	initFonts();
 	points = 0;
@@ -75,6 +83,9 @@ void GameScene::update()
 	Scene::update();
 	doSpawnLogic();
 	doCollisionsLogic();
+	cleanUp();
+	doPowerUpLogic();
+	doBossLogic();
 
 	for (int i = activeExplosions.size() - 1; i >= 0; i--)
 	{
@@ -102,6 +113,18 @@ void GameScene::update()
 
 void GameScene::doSpawnLogic()
 {
+	powerUpSpawnTime--;
+	if (powerUpSpawnTime <= 0)
+	{
+		spawnPowerUp();
+		powerUpSpawnTime = 480 + (rand() % 300);  
+	}
+
+	if (boss != nullptr)
+	{
+		return;
+	}
+
 	if (!player->getIsAlive()) return;
 
 	if (currentSpawnTime > 0)
@@ -112,7 +135,11 @@ void GameScene::doSpawnLogic()
 	{
 		if (enemies.size() < 6) 
 		{
-			spawnEnemy(1);
+			spawnEnemy(2);
+		}
+		if (spawnTime > 30)
+		{
+			spawnTime -= 2;
 		}
 		currentSpawnTime = spawnTime;
 	}
@@ -150,6 +177,30 @@ void GameScene::doCollisionsLogic()
 			}
 			else if (bullet->Getside() == Side::PLAYER_SIDE)
 			{
+				if (boss != nullptr)
+				{
+					int hit = checkCollision
+					(
+						bullet->getX(), bullet->getY(), bullet->getWidth(), bullet->getHeight(),
+						boss->getX(), boss->getY(), boss->getWidth(), boss->getHeight()
+					);
+
+					if (hit == 1)
+					{
+						removeGameObject(bullet);
+						delete bullet;
+
+						if (boss->takeDamage(1))
+						{
+							activeExplosions.emplace_back((float)boss->getX(), (float)boss->getY());
+							removeGameObject(boss);
+							delete boss;
+							boss = nullptr;
+						}
+						return;
+					}
+				}
+
 				for (int j = 0; j < enemies.size(); j++)
 				{
 					Enemy* enemy = enemies[j];
@@ -182,8 +233,8 @@ void GameScene::spawnEnemy(int count)
 
 	for (int i = 0; i < count; i++)
 	{
-		int spawnX = SCREEN_WIDTH + 10;
-		int spawnY = startY + (i * spacing);
+		int spawnX = 50 + (rand() % (SCREEN_WIDTH - 150));
+		int spawnY = -100 - (rand() % 200);   
 
 		Enemy* enemy = new Enemy(player, spawnX, spawnY);
 		this->addGameObject(enemy);
@@ -213,7 +264,7 @@ void GameScene::cleanUp()
 {
 	for (int i = (int)enemies.size() - 1; i >= 0; i--)
 	{
-		if (enemies[i]->getX() < -enemies[i]->getWidth())
+		if (enemies[i]->getY() > SCREEN_HEIGHT)
 			despawnEnemy(enemies[i], false);
 	}
 
@@ -227,6 +278,57 @@ void GameScene::cleanUp()
 			delete b;
 		}
 	}
+}
+
+void GameScene::spawnPowerUp()
+{
+	PowerUpType type = (PowerUpType)(rand() % 3);
+	int spawnX = 30 + (rand() % (SCREEN_WIDTH - 60));
+
+	PowerUp* pUp = new PowerUp(type, spawnX, -40);
+	this->addGameObject(pUp);
+}
+
+void GameScene::doPowerUpLogic()
+{
+	for (int i = (int)objects.size() - 1; i >= 0; i--)
+	{
+		PowerUp* pUp = dynamic_cast<PowerUp*>(objects[i]);
+		if (pUp == NULL) continue;
+
+		int collision = checkCollision
+		(
+			pUp->getX(), pUp->getY(), pUp->getWidth(), pUp->getHeight(),
+			player->getX(), player->getY(), player->getWidth(), player->getHeight()
+		);
+
+		if (collision == 1 && player->getIsAlive())
+		{
+			player->getPowerUp(pUp->getType());
+			removeGameObject(pUp);
+			delete pUp;
+		}
+		else if (pUp->getY() > SCREEN_HEIGHT)
+		{
+			removeGameObject(pUp);
+			delete pUp;
+		}
+	}
+}
+
+void GameScene::doBossLogic()
+{
+	if (boss == nullptr && bossesSpawned < 3 && points >= 10 * (bossesSpawned + 1))
+	{
+		spawnBoss();
+	}
+}
+
+void GameScene::spawnBoss()
+{
+	bossesSpawned++;
+	boss = new bossAI(player, bossesSpawned, (SCREEN_WIDTH / 2) - 64, -150);
+	this->addGameObject(boss);
 }
 
 

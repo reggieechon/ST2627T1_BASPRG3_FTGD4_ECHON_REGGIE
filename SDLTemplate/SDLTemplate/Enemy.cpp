@@ -28,7 +28,7 @@ void Enemy::start()
 	height = 300;
 	speed = 2;
 
-	directionX = -1;
+	directionX = 1;
 	directionY = 1;
 	directionChangeTime = (rand() % 300) + 180;
 	currentDirectionChangeTime = 0;
@@ -43,21 +43,25 @@ void Enemy::start()
 
 void Enemy::update()
 {
-
 	if (currentDirectionChangeTime > 0)
 	{
 		currentDirectionChangeTime--;
 	}
 	else
 	{
-		directionY = -directionY;
-
+		directionX = -directionX;     
 		currentDirectionChangeTime = directionChangeTime;
 	}
 
-	if (y < 0 || y > SCREEN_HEIGHT - height)
+	if (x < 0)
 	{
-		directionY = -directionY;
+		x = 0;
+		directionX = 1;
+	}
+	else if (x > SCREEN_WIDTH - width)
+	{
+		x = SCREEN_WIDTH - width;
+		directionX = -1;
 	}
 
 	x += directionX * speed;
@@ -67,21 +71,23 @@ void Enemy::update()
 	{
 		currentReloadTime--;
 	}
-	else
+	else if (y > 0)
 	{
 		float bulletDirectionX;
 		float bulletDirectionY;
 
 		calcSlope
 		(
-			targetPlayer->getX(), targetPlayer->getY(), x, y + (height / 2) - 5, &bulletDirectionX, &bulletDirectionY
+			targetPlayer->getX(), targetPlayer->getY(),
+			x + (width / 2), y + height,
+			&bulletDirectionX, &bulletDirectionY
 		);
 
 		SoundManager::playSound(sound);
 		Bullet* bullet = new Bullet
 		(
-			x, 
-			y + (height / 2) - 5,
+			x + (width / 2),
+			y + height,
 			bulletDirectionX,
 			bulletDirectionY,
 			5,

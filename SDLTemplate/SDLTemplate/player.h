@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "SoundManager.h"
 #include "Bullet.h"
+#include "PowerUp.h"
 #include <vector>
 
 class Player : public GameObject
@@ -15,6 +16,9 @@ public:
 	void draw() override;
 	bool getIsAlive();
 	void getDead();
+
+	void getPowerUp(PowerUpType type);
+
 private:
 	SDL_Texture* texture;
 	int currentSpeed;
@@ -25,6 +29,11 @@ private:
 
 	int defaultSpeed;
 	int boostedSpeed;
+
+	int speedBoostTimer;
+	int doubleShotTimer;
+	int burstTimer;
+	int burstCooldown;
 
 	float reloadTime;
 	float altreloadTime;

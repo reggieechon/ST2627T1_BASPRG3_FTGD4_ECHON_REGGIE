@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GameScene.h"
 #include "GameObject.h"
+#include <cmath>
 
 Player::~Player()
 {
@@ -16,15 +17,13 @@ void Player::start()
 	sound->volume = 24;
 
 	// Initialize to avoid garbage values
-	x = 100;
-	y = 100;
 	width = 0;
 	height = 0;
 
 	isAlive = true;
 
 	defaultSpeed = 5;
-	boostedSpeed = 15;
+	boostedSpeed = 8;
 	currentSpeed = defaultSpeed;
 
 	reloadTime = 8; // 0.16sec (8/60)
@@ -32,8 +31,15 @@ void Player::start()
 	currentReloadTime = 0;
 	altcurrentReloadTime = 0;
 
+	speedBoostTimer = 0;
+	doubleShotTimer = 0;
+	burstTimer = 0;
+	burstCooldown = 0;
+
 	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+	x = (SCREEN_WIDTH / 2) - (width / 2);
+	y = SCREEN_HEIGHT - height - 50;
 }
 
 void Player::update()
@@ -49,6 +55,28 @@ void Player::update()
 		altcurrentReloadTime--;
 	}
 
+	if (speedBoostTimer > 0) 
+	{
+		speedBoostTimer--;
+	}
+
+	if (doubleShotTimer > 0)  
+	{
+		doubleShotTimer--;
+	}
+
+	if (burstTimer > 0)      
+	{
+		burstTimer--;
+	}
+
+	if (burstCooldown > 0)    
+	{
+		burstCooldown--;
+	}
+
+	currentSpeed = (speedBoostTimer > 0) ? boostedSpeed : defaultSpeed;
+
 	if (!isAlive)
 	{
 		return;
@@ -57,53 +85,36 @@ void Player::update()
 	if (app.keyboard[SDL_SCANCODE_F] && currentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
-		Bullet* bullet = new Bullet
-		(
-			x + width - 5,
-			y + (height / 2) - 5,
-			1,
-			0,
-			5,
-			Side::PLAYER_SIDE
-		);
-		getScene()->addGameObject(bullet);
+
+		if (doubleShotTimer > 0)
+		{
+			getScene()->addGameObject(new Bullet(x + 5, y, 0, -1, 5, Side::PLAYER_SIDE));
+			getScene()->addGameObject(new Bullet(x + width - 15, y, 0, -1, 5, Side::PLAYER_SIDE));
+		}
+		else
+		{
+			getScene()->addGameObject(new Bullet(x + (width / 2) - 5, y, 0, -1, 5, Side::PLAYER_SIDE));
+		}
 
 		currentReloadTime = reloadTime;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_G] && altcurrentReloadTime <= 0)
+	if (app.keyboard[SDL_SCANCODE_E] && burstTimer > 0 && burstCooldown <= 0)
 	{
 		SoundManager::playSound(sound);
-		Bullet* bullet1 = new Bullet(
-			x + width + 5,
-			y + height - 5,
-			1,
-			0,
-			5,
-			Side::PLAYER_SIDE
-		);
-		Bullet* bullet2 = new Bullet(
-			x + width - 5,
-			y - 5,
-			1,
-			0,
-			5,
-			Side::PLAYER_SIDE
-		);
-		getScene()->addGameObject(bullet1);
-		getScene()->addGameObject(bullet2);
 
-		altcurrentReloadTime = altreloadTime;
+		for (int i = 0; i < 8; i++)
+		{
+			float angle = (-70 + i * 20) * 3.14159f / 180.0f;  
+			float dirX = sinf(angle);
+			float dirY = -cosf(angle);
+
+			getScene()->addGameObject(new Bullet(x + (width / 2) - 5, y, dirX, dirY, 5, Side::PLAYER_SIDE));
+		}
+
+		burstCooldown = 120;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_LSHIFT])
-	{
-		currentSpeed = boostedSpeed;
-	}
-	if (app.keyboard[SDL_SCANCODE_BACKSPACE])
-	{
-		currentSpeed = defaultSpeed;
-	}
 	if (app.keyboard[SDL_SCANCODE_W])
 	{
 		y -= currentSpeed;
@@ -120,6 +131,14 @@ void Player::update()
 	{
 		x += currentSpeed;
 	}
+
+	if (x < 0) x = 0;
+
+	if (x > SCREEN_WIDTH - width) x = SCREEN_WIDTH - width;
+
+	if (y < 0) y = 0;
+
+	if (y > SCREEN_HEIGHT - height) y = SCREEN_HEIGHT - height;
 }
 
 void Player::draw()
@@ -138,4 +157,20 @@ bool Player::getIsAlive()
 void Player::getDead()
 {
 	isAlive = false;
+}
+
+void Player::getPowerUp(PowerUpType type)
+{
+	if (type == PowerUpType::SPEED)
+	{
+		speedBoostTimer = 600;
+	}  
+	else if (type == PowerUpType::DOUBLE_SHOT)
+	{
+		doubleShotTimer = 900;
+	}
+	else if (type == PowerUpType::BURST)
+	{
+		burstTimer = 900;
+	}
 }

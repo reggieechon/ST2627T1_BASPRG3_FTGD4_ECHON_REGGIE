@@ -4,6 +4,8 @@
 #include "player.h"
 #include "Enemy.h"
 #include "text.h"
+#include "PowerUp.h"
+#include "bossAI.h"
 #include <vector> 
 
 struct Explosion 
@@ -34,11 +36,20 @@ private:
     void spawnEnemy(int count);
     void despawnEnemy(Enemy* enemy, bool explode = true);
     void cleanUp();
+    void spawnPowerUp();
+    void doPowerUpLogic();
+
+    void spawnBoss();
+    void doBossLogic();
+
 
     Player* player;
     Enemy* enemy;
+    bossAI* boss;
     int points;
+    int bossesSpawned;
 
+    float powerUpSpawnTime;
     float spawnTime;
     float currentSpawnTime;
 

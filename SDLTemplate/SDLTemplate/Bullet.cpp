@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet(int positionX, int positionY, int directionX, int directionY, int speed, Side side)
+Bullet::Bullet(int positionX, int positionY, float directionX, float directionY, int speed, Side side)
 {
 	this->x = positionX;
 	this->y = positionY;
