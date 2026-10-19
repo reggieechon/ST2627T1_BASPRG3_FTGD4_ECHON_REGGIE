@@ -12,12 +12,11 @@ class Enemy:
 	public GameObject
 {
 public:
-	Enemy();
+	Enemy(Player* player, int xPos, int yPos);
 	~Enemy();
 	void start() override;
 	void update() override;
 	void draw() override;
-	void setPlayerTarget(Player* player);
 	void setPosition(int xPos, int yPos);
 
 private:
@@ -34,7 +33,5 @@ private:
 
 	float reloadTime;
 	float currentReloadTime;
-
-	std::vector<Bullet*> bullets;
 };
 

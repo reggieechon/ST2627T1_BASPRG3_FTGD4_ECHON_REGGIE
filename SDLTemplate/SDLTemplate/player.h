@@ -30,6 +30,4 @@ private:
 	float altreloadTime;
 	float currentReloadTime;
 	float altcurrentReloadTime;
-
-	std::vector<Bullet*> bullets;
 };

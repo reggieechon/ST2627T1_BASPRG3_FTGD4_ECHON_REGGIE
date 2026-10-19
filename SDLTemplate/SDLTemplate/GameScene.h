@@ -32,7 +32,8 @@ private:
     void doCollisionsLogic();
 
     void spawnEnemy(int count);
-    void despawnEnemy(Enemy* enemy);
+    void despawnEnemy(Enemy* enemy, bool explode = true);
+    void cleanUp();
 
     Player* player;
     Enemy* enemy;

@@ -4,12 +4,7 @@
 
 Player::~Player()
 {
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		delete bullets[i];
-	}
 
-	bullets.clear();
 }
 
 void Player::start()
@@ -43,17 +38,6 @@ void Player::start()
 
 void Player::update()
 {
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		if (bullets[i]->getX() > SCREEN_WIDTH)
-		{
-			Bullet* bulletToDelete = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete bulletToDelete;
-
-			break;
-		}
-	}
 
 	if (currentReloadTime > 0)
 	{
@@ -83,7 +67,6 @@ void Player::update()
 			Side::PLAYER_SIDE
 		);
 		getScene()->addGameObject(bullet);
-		bullets.push_back(bullet);
 
 		currentReloadTime = reloadTime;
 	}
@@ -108,9 +91,7 @@ void Player::update()
 			Side::PLAYER_SIDE
 		);
 		getScene()->addGameObject(bullet1);
-		bullets.push_back(bullet1);
 		getScene()->addGameObject(bullet2);
-		bullets.push_back(bullet2);
 
 		altcurrentReloadTime = altreloadTime;
 	}

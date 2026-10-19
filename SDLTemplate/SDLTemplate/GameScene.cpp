@@ -8,26 +8,13 @@ GameScene::GameScene()
 	player = new Player();
 	this->addGameObject(player);
 
-	enemy = new Enemy();
-	this->addGameObject(enemy);
-
 	spawnTime = 300;
 	currentSpawnTime = spawnTime;
-
-	for (int i = 0; i < 3; i++)
-	{
-		Enemy* enemy = new Enemy();
-		this->addGameObject(enemy);
-		enemy->targetPlayer(player);
-
-		enemy->setPosition(1200, 300 + (rand() % 300));
-		spawnedEnemies.push_back(enemy);
-	}
 }
 
 GameScene::~GameScene()
 {
-	delete player;
+
 }
 
 void GameScene::start()
@@ -97,19 +84,40 @@ void GameScene::update()
 			activeExplosions.erase(activeExplosions.begin() + i);
 		}
 	}
+
+	for (int i = enemies.size() - 1; i >= 0; i--)
+	{
+		if (enemies[i]->getX() < -enemies[i]->getWidth())
+		{
+			despawnEnemy(enemies[i], false);
+		}
+	}
+
+	if (!player->getIsAlive() && app.keyboard[SDL_SCANCODE_R])
+	{
+		Scene::setActiveScene(new GameScene());
+		return; 
+	}
 }
 
 void GameScene::doSpawnLogic()
 {
+	if (!player->getIsAlive()) return;
+
 	if (currentSpawnTime > 0)
 	{
 		currentSpawnTime--;
 	}
 	else
 	{
-		spawnEnemy(2);
+		if (enemies.size() < 6) 
+		{
+			spawnEnemy(1);
+		}
 		currentSpawnTime = spawnTime;
 	}
+
+	std::cout << "enemies alive: " << enemies.size() << std::endl;
 }
 
 void GameScene::doCollisionsLogic()
@@ -121,6 +129,11 @@ void GameScene::doCollisionsLogic()
 		{
 			if (bullet->Getside() == Side::ENEMY_SIDE)
 			{
+				if (!player->getIsAlive())
+				{
+					continue;
+				}
+
 				int collision = checkCollision
 				(
 					bullet->getX(), bullet->getY(), bullet->getWidth(), bullet->getHeight(),
@@ -129,8 +142,10 @@ void GameScene::doCollisionsLogic()
 
 				if (collision == 1)
 				{
-					std::cout << "Player hit" << std::endl;
-					break;
+					player->getDead();
+					removeGameObject(bullet);
+					delete bullet;
+					return;
 				}
 			}
 			else if (bullet->Getside() == Side::PLAYER_SIDE)
@@ -148,9 +163,11 @@ void GameScene::doCollisionsLogic()
 					if (collision == 1)
 					{
 						despawnEnemy(enemy);
+						removeGameObject(bullet);
+						delete bullet;
 						points++;
 						std::cout << "enemy" << std::endl;
-						break;
+						return;
 					}
 				}
 			}
@@ -174,24 +191,42 @@ void GameScene::spawnEnemy(int count)
 	}
 }
 
-void GameScene::despawnEnemy(Enemy* enemy)
+void GameScene::despawnEnemy(Enemy* enemy, bool explode)
 {
-	int index = -1;
-
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		if (enemy == enemies[i])
+		if (enemies[i] == enemy)
 		{
-			index = i;
+			if (explode)
+			{
+				activeExplosions.emplace_back((float)enemy->getX(), (float)enemy->getY());
+			}
+			enemies.erase(enemies.begin() + i);
+			removeGameObject(enemy);
+			delete enemy;
 			break;
 		}
 	}
+}
 
-	if (index >= 0)
+void GameScene::cleanUp()
+{
+	for (int i = (int)enemies.size() - 1; i >= 0; i--)
 	{
-		activeExplosions.push_back({ enemy->getX(), enemy->getY() });
+		if (enemies[i]->getX() < -enemies[i]->getWidth())
+			despawnEnemy(enemies[i], false);
+	}
 
-		enemies.erase(enemies.begin() + index);
-		delete enemy;
+	for (int i = (int)objects.size() - 1; i >= 0; i--)
+	{
+		Bullet* b = dynamic_cast<Bullet*>(objects[i]);
+		if (b != NULL && (b->getX() < 0 || b->getX() > SCREEN_WIDTH ||
+			b->getY() < 0 || b->getY() > SCREEN_HEIGHT))
+		{
+			removeGameObject(b);
+			delete b;
+		}
 	}
 }
+
+

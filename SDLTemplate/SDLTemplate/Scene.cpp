@@ -45,7 +45,10 @@ void Scene::addGameObject(GameObject* obj)
 void Scene::removeGameObject(GameObject* obj)
 {
 	std::vector<GameObject*>::iterator itr = std::find(objects.begin(), objects.end(), obj);
-	objects.erase(itr);
+	if (itr != objects.end())
+	{
+		objects.erase(itr);
+	}
 }
 
 void Scene::update()

@@ -3,21 +3,16 @@
 #include "GameObject.h"
 
 
-Enemy::Enemy(Player* player)
+Enemy::Enemy(Player* player, int xPos, int yPos)
 {
 	targetPlayer = player;
-	x = SCREEN_WIDTH + (rand() % 200);
-	y = rand() % SCREEN_HEIGHT;
+	x = xPos;
+	y = yPos;
 }
 
 Enemy::~Enemy()
 {
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		delete bullets[i];
-	}
 
-	bullets.clear();
 }
 
 void Enemy::start()
@@ -31,7 +26,7 @@ void Enemy::start()
 	// Initialize to avoid garbage values
 	width = 1000;
 	height = 300;
-	speed = 5;
+	speed = 2;
 
 	directionX = -1;
 	directionY = 1;
@@ -48,16 +43,6 @@ void Enemy::start()
 
 void Enemy::update()
 {
-	for (int i = 0; i < bullets.size(); i++)
-	{
-		if (bullets[i]->getX() < 0 || bullets[i]->getX() > SCREEN_WIDTH)
-		{
-			Bullet* bulletToDelete = bullets[i];
-			bullets.erase(bullets.begin() + i);
-			delete bulletToDelete;
-			break;
-		}
-	}
 
 	if (currentDirectionChangeTime > 0)
 	{
@@ -104,7 +89,6 @@ void Enemy::update()
 		);
 
 		getScene()->addGameObject(bullet);
-		bullets.push_back(bullet);
 
 		currentReloadTime = reloadTime;
 	}
@@ -114,7 +98,7 @@ void Enemy::update()
 void Enemy::setPosition(int xPos, int yPos)
 {
 	this->x = xPos;
-	this->y = xPos;
+	this->y = yPos;
 }
 
 void Enemy::draw()
