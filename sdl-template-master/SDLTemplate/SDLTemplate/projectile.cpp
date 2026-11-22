@@ -1,0 +1,47 @@
+#include "projectile.h"
+
+projectile::projectile(int positionX, int positionY, float directionX, float directionY, int speed, Side side)
+{
+	this->x = positionX;
+	this->y = positionY;
+	this->directionX = directionX;
+	this->directionY = directionY;
+	this->speed = speed;
+	this->side = side;
+}
+
+void projectile::start()
+{
+
+	if (side == Side::ENEMY_SIDE)
+	{
+		texture = loadTexture("gfx/alienBullet.png");
+	}
+	else
+	{
+		texture = loadTexture("gfx/playerBullet.png");
+	}
+
+	// Initialize to avoid garbage values
+	width = 0;
+	height = 0;
+
+	// Query the texture to set our width and height
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+}
+
+void projectile::update()
+{
+	x += directionX * speed;
+	y += directionY * speed;
+}
+
+void projectile::draw()
+{
+	blit(texture, x, y);
+}
+
+Side projectile::Getside()
+{
+	return side;
+}
