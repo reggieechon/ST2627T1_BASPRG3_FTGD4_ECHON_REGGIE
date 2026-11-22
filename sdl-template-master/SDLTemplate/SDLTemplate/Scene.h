@@ -10,7 +10,7 @@ class Scene
 {
 public:
 	Scene();
-	~Scene();
+	virtual ~Scene();
 
 	static void setActiveScene(Scene* scene);
 	static Scene* getActiveScene();
@@ -18,13 +18,14 @@ public:
 	void addGameObject(GameObject* obj);
 	void removeGameObject(GameObject* obj);
 
+	std::vector <GameObject*>& getObjects() { return objects; }
+
 	virtual void start();
 	virtual void update();
 	virtual void draw();
 
-protected:
-	std::vector <GameObject*> objects;
 private:
+	std::vector<GameObject*> objects;
 	bool hasStarted;
 	static Scene* activeScene;
 };

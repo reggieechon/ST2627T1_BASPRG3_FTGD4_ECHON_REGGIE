@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include "player.h"
+#include "platform.h"
 
 GameScene::GameScene()
 {
@@ -7,7 +9,10 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-
+	addGameObject(new player());
+	addGameObject(new platform(250, 540, 300, 29));
+	addGameObject(new platform(450, 600, 250, 29));
+	addGameObject(new platform(100, 200, 250, 29));
 }
 
 void GameScene::start()

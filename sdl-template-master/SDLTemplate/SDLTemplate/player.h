@@ -6,10 +6,10 @@
 #include "projectile.h"
 #include <vector>
 
-class Player : public GameObject
+class player : public GameObject
 {
 public:
-	~Player();
+	~player();
 	void start() override;
 	void update() override;
 	void draw() override;
@@ -23,6 +23,8 @@ private:
 	Mix_Chunk* sound;
 
 	bool isAlive;
+	int velocityY;
+	bool onGround;
 
 	int defaultSpeed;
 	int boostedSpeed;

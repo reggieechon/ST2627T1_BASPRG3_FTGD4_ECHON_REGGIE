@@ -3,7 +3,7 @@ class Scene;
 class GameObject
 {
 public:
-	~GameObject();
+	virtual ~GameObject();
 	// Sets the scene pointer for the gameobject
 	void setScene(Scene* scene);
 	// Returns the scene pointer where this game object is found in
@@ -17,6 +17,8 @@ public:
 	int getY();
 	int getWidth();
 	int getHeight();
+
+	bool overlaping(GameObject* other);
 
 protected:
 	int x;
