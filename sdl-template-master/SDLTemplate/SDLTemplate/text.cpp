@@ -25,7 +25,7 @@ static char drawTextBuffer[MAX_LINE_LENGTH];
 
 void initFonts(void)
 {
-	fontTexture = loadTexture("gfx/font.png");
+	fontTexture = loadTexture("assets/font.png");
 }
 
 void drawText(int x, int y, int r, int g, int b, int align, const  char* format, ...)

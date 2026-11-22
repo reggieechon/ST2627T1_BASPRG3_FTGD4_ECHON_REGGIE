@@ -15,3 +15,8 @@ void platform::draw()
 	texture = loadTexture("assets/platform.png");
 	blit(texture, x, y);
 }
+
+void platform::update()
+{
+	y += 2;
+}

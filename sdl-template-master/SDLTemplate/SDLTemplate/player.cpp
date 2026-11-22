@@ -1,21 +1,28 @@
-#include "Player.h"
+#include "player.h"
 #include "GameScene.h"
 #include "GameObject.h"
 #include "platform.h"
+#include "Scene.h"
 #include <cmath>
 
-player::~player()
+using namespace std;
+
+Player::~Player()
 {
 
 }
 
-void player::start()
+void Player::start()
 {
 	// Load texture
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("assets/player.png");
-	sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
-	sound->volume = 24;
+	if (texture == NULL)
+	{
+		cout << "no player" << endl;
+	}
+	//sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
+	//sound->volume = 24;
 
 	// Initialize to avoid garbage values
 	width = 0;
@@ -23,19 +30,10 @@ void player::start()
 
 	isAlive = true;
 
-	defaultSpeed = 5;
-	boostedSpeed = 8;
-	currentSpeed = defaultSpeed;
-
 	reloadTime = 8; // 0.16sec (8/60)
 	altreloadTime = 16;
 	currentReloadTime = 0;
-	altcurrentReloadTime = 0;
-
-	speedBoostTimer = 0;
-	doubleShotTimer = 0;
-	burstTimer = 0;
-	burstCooldown = 0;
+	altcurrentReloadTime = 0; 
 
 	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
@@ -45,41 +43,8 @@ void player::start()
 	onGround = false;
 }
 
-void player::update()
+void Player::update()
 {
-
-	if (currentReloadTime > 0)
-	{
-		currentReloadTime--;
-	}
-
-	if (altcurrentReloadTime > 0)
-	{
-		altcurrentReloadTime--;
-	}
-
-	if (speedBoostTimer > 0)
-	{
-		speedBoostTimer--;
-	}
-
-	if (doubleShotTimer > 0)
-	{
-		doubleShotTimer--;
-	}
-
-	if (burstTimer > 0)
-	{
-		burstTimer--;
-	}
-
-	if (burstCooldown > 0)
-	{
-		burstCooldown--;
-	}
-
-	currentSpeed = (speedBoostTimer > 0) ? boostedSpeed : defaultSpeed;
-
 	if (!isAlive)
 	{
 		return;
@@ -124,17 +89,32 @@ void player::update()
 
 	// ---- Horizontal movement, then resolve ----
 	int dx = 0;
-	if (app.keyboard[SDL_SCANCODE_A]) dx -= currentSpeed;
-	if (app.keyboard[SDL_SCANCODE_D]) dx += currentSpeed;
+
+	if (app.keyboard[SDL_SCANCODE_A]) 
+	{
+		dx -= currentSpeed;
+	}
+
+	if (app.keyboard[SDL_SCANCODE_D]) 
+	{
+		dx += currentSpeed;
+	}
+
 	x += dx;
 
-	for (GameObject* obj : getScene()->objects())
+	for (GameObject* obj : getScene()->getObjects())
 	{
 		platform* p = dynamic_cast<platform*>(obj);
-		if (p == nullptr || !overlap(p)) continue;
+		if (p == nullptr || !overlaping(p)) continue;
 
-		if (dx > 0)      x = p->getX() - width;            // hit its left side
-		else if (dx < 0) x = p->getX() + p->getWidth();    // hit its right side
+		if (dx > 0)     
+		{
+			x = p->getX() - width;            // hit its left side
+		}
+		else if (dx < 0) 
+		{
+			x = p->getX() + p->getWidth();    // hit its right side
+		}
 	}
 
 	// ---- Jump ----
@@ -152,7 +132,7 @@ void player::update()
 	for (GameObject* obj : getScene()->getObjects())
 	{
 		platform* p = dynamic_cast<platform*>(obj);
-		if (p == nullptr || !overlap(p)) continue;
+		if (p == nullptr || !overlaping(p)) continue;
 
 		if (velocityY > 0)        // falling: land on top
 		{
@@ -179,7 +159,7 @@ void player::update()
 	}
 }
 
-void player::draw()
+void Player::draw()
 {
 	if (isAlive)
 	{
@@ -187,12 +167,12 @@ void player::draw()
 	}
 }
 
-bool player::getIsAlive()
+bool Player::getIsAlive()
 {
 	return isAlive;
 }
 
-void player::getDead()
+void Player::getDead()
 {
 	isAlive = false;
 }

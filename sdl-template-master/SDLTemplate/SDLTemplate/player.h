@@ -6,10 +6,10 @@
 #include "projectile.h"
 #include <vector>
 
-class player : public GameObject
+class Player : public GameObject
 {
 public:
-	~player();
+	~Player();
 	void start() override;
 	void update() override;
 	void draw() override;

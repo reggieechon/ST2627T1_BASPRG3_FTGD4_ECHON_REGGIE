@@ -11,4 +11,5 @@ public:
 
 	platform(int x, int y, int w, int h);
 	void draw() override;
+	void update() override;
 };

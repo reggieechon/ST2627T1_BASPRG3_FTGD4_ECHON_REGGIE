@@ -1,7 +1,7 @@
 #pragma once
 
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
-#define WINDOW_NAME				"BASPRG3 SDL TEMPLATE"
+#define WINDOW_NAME				"THE ninja"
 #define FPS                      60
 #define MAX_KEYBOARD_KEYS        350
 #define MAX_NAME_LENGTH          32
