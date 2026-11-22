@@ -14,5 +14,6 @@ public:
 private:
 
 	Player* player;
+	SDL_Texture* backgroundTexture;
 };
 

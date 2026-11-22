@@ -23,6 +23,7 @@ void GameScene::start()
 {
 	Scene::start();
 	SoundManager::playMusic(1);
+	backgroundTexture = loadTexture("assets/Layer_1.png");
 	// Initialize any scene logic here
 }
 
