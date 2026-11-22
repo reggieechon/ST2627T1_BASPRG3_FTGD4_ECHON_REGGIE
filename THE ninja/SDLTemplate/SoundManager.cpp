@@ -50,7 +50,7 @@ void SoundManager::playSound(Mix_Chunk* sound, int channel)
 	Mix_PlayChannel(channel, sound, 0);
 }
 
-Mix_Chunk* SoundManager::loadMusic(const char* filename)
+void SoundManager::loadMusic(const char* filename)
 {
 
 	if (getInstance()->music != NULL)
@@ -61,8 +61,6 @@ Mix_Chunk* SoundManager::loadMusic(const char* filename)
 	}
 
 	getInstance()->music = Mix_LoadMUS(filename);
-
-	return;
 }
 
 void SoundManager::playMusic(int loop)

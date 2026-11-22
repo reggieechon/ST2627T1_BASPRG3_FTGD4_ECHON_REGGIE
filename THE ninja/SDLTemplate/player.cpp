@@ -30,6 +30,10 @@ void Player::start()
 
 	isAlive = true;
 
+	defaultSpeed = 5;
+	boostedSpeed = 8;
+	currentSpeed = defaultSpeed;
+
 	reloadTime = 8; // 0.16sec (8/60)
 	altreloadTime = 16;
 	currentReloadTime = 0;
@@ -45,6 +49,38 @@ void Player::start()
 
 void Player::update()
 {
+	if (currentReloadTime > 0)
+	{
+		currentReloadTime--;
+	}
+
+	if (altcurrentReloadTime > 0)
+	{
+		altcurrentReloadTime--;
+	}
+
+	if (speedBoostTimer > 0)
+	{
+		speedBoostTimer--;
+	}
+
+	if (doubleShotTimer > 0)
+	{
+		doubleShotTimer--;
+	}
+
+	if (burstTimer > 0)
+	{
+		burstTimer--;
+	}
+
+	if (burstCooldown > 0)
+	{
+		burstCooldown--;
+	}
+
+	currentSpeed = (speedBoostTimer > 0) ? boostedSpeed : defaultSpeed;
+
 	if (!isAlive)
 	{
 		return;

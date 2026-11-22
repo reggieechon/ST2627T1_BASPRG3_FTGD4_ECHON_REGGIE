@@ -10,13 +10,17 @@ platform::platform(int x, int y, int w, int h)
 	this->height = h;
 }
 
-void platform::draw()
+void platform::start()
 {
 	texture = loadTexture("assets/platform.png");
-	blit(texture, x, y);
+}
+
+void platform::draw()
+{
+	SDL_Rect r = { x, y, width, height };
+	SDL_RenderCopy(app.renderer, texture, NULL, &r);
 }
 
 void platform::update()
 {
-	y += 2;
 }

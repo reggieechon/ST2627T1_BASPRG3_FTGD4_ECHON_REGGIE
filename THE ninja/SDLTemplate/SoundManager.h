@@ -21,7 +21,7 @@ public:
 	static Mix_Chunk* loadSound(const char* filename);
 	static void playSound(const char* filename, int channel = -1);
 	static void playSound(Mix_Chunk* sound, int channel = -1);
-	static Mix_Chunk* loadMusic(const char* filename);
+	static void loadMusic(const char* filename);
 	static void playMusic(int loop);
 	Mix_Music* music;
 private:

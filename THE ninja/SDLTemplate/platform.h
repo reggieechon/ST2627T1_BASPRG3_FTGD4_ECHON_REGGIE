@@ -10,6 +10,7 @@ public:
 	SDL_Texture* texture;
 
 	platform(int x, int y, int w, int h);
+	void start() override;
 	void draw() override;
 	void update() override;
 };
