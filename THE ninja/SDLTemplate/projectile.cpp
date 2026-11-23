@@ -1,4 +1,5 @@
 #include "projectile.h"
+#include <cmath>
 
 projectile::projectile(int positionX, int positionY, float directionX, float directionY, int speed, Side side)
 {
@@ -19,7 +20,7 @@ void projectile::start()
 	}
 	else
 	{
-		texture = loadTexture("gfx/playerBullet.png");
+		texture = loadTexture("assets/projectile.png");
 	}
 
 	// Initialize to avoid garbage values

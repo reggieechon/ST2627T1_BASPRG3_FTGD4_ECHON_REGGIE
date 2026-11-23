@@ -21,6 +21,8 @@ private:
 	int currentSpeed;
 
 	Mix_Chunk* sound;
+	Mix_Chunk* jump;
+	Mix_Chunk* grunt;
 
 	bool isAlive;
 	int velocityY;

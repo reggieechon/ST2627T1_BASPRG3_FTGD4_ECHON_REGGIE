@@ -13,6 +13,9 @@ typedef struct {
 	SDL_Renderer* renderer;
 	SDL_Window* window;
 	int keyboard[MAX_KEYBOARD_KEYS];
+	int mouseX;
+	int mouseY;
+	int mouseButtons[6];
 	Texture textureHead, * textureTail;
 	char inputText[MAX_LINE_LENGTH];
 } App;

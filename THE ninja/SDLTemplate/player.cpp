@@ -17,12 +17,12 @@ void Player::start()
 	// Load texture
 	// This only supports jpeg, png, and bitmaps
 	texture = loadTexture("assets/player.png");
-	if (texture == NULL)
-	{
-		cout << "no player" << endl;
-	}
-	//sound = SoundManager::loadSound("sound/10 Guage Shotgun-SoundBible.com-74120584.ogg");
-	//sound->volume = 24;
+
+	sound = SoundManager::loadSound("sfx/knife2.mp3");
+	sound->volume = 24;
+
+	jump = SoundManager::loadSound("sfx/jump.mp3");
+	jump->volume = 18;
 
 	// Initialize to avoid garbage values
 	width = 0;
@@ -86,44 +86,51 @@ void Player::update()
 		return;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_F] && currentReloadTime <= 0)
+	if (app.mouseButtons[SDL_BUTTON_LEFT] && currentReloadTime <= 0)
 	{
 		SoundManager::playSound(sound);
 
-		if (doubleShotTimer > 0)
+		int spawnX = x + (width / 2) - 5;
+		int spawnY = y;
+
+		float delX = static_cast<float>(app.mouseX - spawnX);
+		float delY = static_cast<float>(app.mouseY - spawnY);
+		float length = sqrt(delX * delX + delY * delY);
+
+		float dirX = 0.0f;
+		float dirY = -1.0f;
+		if (length > 0.0001f)
 		{
-			getScene()->addGameObject(new projectile(x + 5, y, 0, -1, 5, Side::PLAYER_SIDE));
-			getScene()->addGameObject(new projectile(x + width - 15, y, 0, -1, 5, Side::PLAYER_SIDE));
+			dirX = delX / length;
+			dirY = delY / length;
 		}
-		else
-		{
-			getScene()->addGameObject(new projectile(x + (width / 2) - 5, y, 0, -1, 5, Side::PLAYER_SIDE));
-		}
+
+		getScene()->addGameObject(new projectile(spawnX, spawnY, dirX, dirY, 10, Side::PLAYER_SIDE));
+		cout << "shing" << endl;
 
 		currentReloadTime = reloadTime;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_E] && burstTimer > 0 && burstCooldown <= 0)
-	{
-		SoundManager::playSound(sound);
+	//if (app.keyboard[SDL_SCANCODE_E] && burstTimer > 0 && burstCooldown <= 0)
+	//{
+	//	SoundManager::playSound(sound);
 
-		for (int i = 0; i < 8; i++)
-		{
-			float angle = (-70 + i * 20) * 3.14159f / 180.0f;
-			float dirX = sinf(angle);
-			float dirY = -cosf(angle);
+	//	for (int i = 0; i < 8; i++)
+	//	{
+	//		float angle = (-70 + i * 20) * 3.14159f / 180.0f;
+	//		float dirX = sinf(angle);
+	//		float dirY = -cosf(angle);
 
-			getScene()->addGameObject(new projectile(x + (width / 2) - 5, y, dirX, dirY, 5, Side::PLAYER_SIDE));
-		}
+	//		getScene()->addGameObject(new projectile(x + (width / 2) - 5, y, dirX, dirY, 5, Side::PLAYER_SIDE));
+	//	}
 
-		burstCooldown = 120;
-	}
+	//	burstCooldown = 120;
+	//}
 
-	const int GRAVITY = 1;
-	const int JUMP_STRENGTH = 16;
-	const int MAX_FALL_SPEED = 15;
+	const int gravity = 1;
+	const int jumpStrength = 16;
+	const int fallSpeed = 15;
 
-	// ---- Horizontal movement, then resolve ----
 	int dx = 0;
 
 	if (app.keyboard[SDL_SCANCODE_A]) 
@@ -145,23 +152,24 @@ void Player::update()
 
 		if (dx > 0)     
 		{
-			x = p->getX() - width;            // hit its left side
+			x = p->getX() - width;           
 		}
 		else if (dx < 0) 
 		{
-			x = p->getX() + p->getWidth();    // hit its right side
+			x = p->getX() + p->getWidth();  
 		}
 	}
 
 	// ---- Jump ----
 	if (app.keyboard[SDL_SCANCODE_SPACE] && onGround)
 	{
-		velocityY = -JUMP_STRENGTH;
+		SoundManager::playSound(jump);
+		velocityY = -jumpStrength;
 	}
 
 	// ---- Gravity, then resolve ----
-	velocityY += GRAVITY;
-	if (velocityY > MAX_FALL_SPEED) velocityY = MAX_FALL_SPEED;
+	velocityY += gravity;
+	if (velocityY > fallSpeed) velocityY = fallSpeed;
 	y += velocityY;
 	onGround = false;
 
@@ -170,13 +178,13 @@ void Player::update()
 		platform* p = dynamic_cast<platform*>(obj);
 		if (p == nullptr || !overlaping(p)) continue;
 
-		if (velocityY > 0)        // falling: land on top
+		if (velocityY > 0)    
 		{
 			y = p->getY() - height;
 			velocityY = 0;
 			onGround = true;
 		}
-		else if (velocityY < 0)   // rising: bonk head
+		else if (velocityY < 0) 
 		{
 			y = p->getY() + p->getHeight();
 			velocityY = 0;
@@ -191,7 +199,7 @@ void Player::update()
 	{
 		y = SCREEN_HEIGHT - height;
 		velocityY = 0;
-		onGround = true;   // screen bottom acts as floor
+		onGround = true;  
 	}
 }
 

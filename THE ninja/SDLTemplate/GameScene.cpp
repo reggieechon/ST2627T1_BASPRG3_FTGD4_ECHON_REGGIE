@@ -3,6 +3,8 @@
 #include "platform.h"
 #include "algorithm"
 
+using namespace std;
+
 const int tileWidth = 64; 
 const int margin = 250;                   
 const int hugeL = margin;            
@@ -22,13 +24,13 @@ GameScene::GameScene()
 {
 	player = new Player();
 	this->addGameObject(player);
-	SoundManager::loadMusic("music/Sekiro Shadows Die Twice OST.mp3");
+	//SoundManager::loadMusic("music/Sekiro Shadows Die Twice OST.mp3");
 	//music->volume = 24;
 
 	int width = randTiles(2, 4);
 	int x = randRange(hugeL, hugeR - width);
 	int y = SCREEN_HEIGHT - 100;
-	addGameObject(new platform(x, y, width, 10));
+	addGameObject(new platform(x, y, width, 9));
 
 	int prevCenter = x + width / 2;
 
@@ -38,7 +40,7 @@ GameScene::GameScene()
 		if (y < 100) break;
 
 		x = randRange(hugeL, hugeR - width);
-		int center = prevCenter + randRange(-200, 200);
+		int center = prevCenter + randRange(-100, 100);
 		x = center - width / 2;
 
 		if (x < 0) 
@@ -51,7 +53,7 @@ GameScene::GameScene()
 			x = SCREEN_WIDTH - width;
 		}
 
-		addGameObject(new platform(x, y, width, 10));
+		addGameObject(new platform(x, y, width, 8));
 		prevCenter = x + width / 2;
 	}
 }
@@ -65,16 +67,28 @@ void GameScene::start()
 {
 	Scene::start();
 	SoundManager::playMusic(1);
-	backgroundTexture = loadTexture("assets/Layer_1.png");
+	backgroundTexture = loadTexture("assets/background.png");
+	SDL_ShowCursor(1);
 	// Initialize any scene logic here
 }
 
 void GameScene::draw()
 {
+	if (backgroundTexture != nullptr)
+	{
+		SDL_RenderCopy(app.renderer, backgroundTexture, nullptr, nullptr);
+	}
+
 	Scene::draw();
 }
 
 void GameScene::update()
 {
 	Scene::update();
+
+	if (app.keyboard[SDL_SCANCODE_R])
+	{
+		Scene::setActiveScene(new GameScene());
+		return;
+	}
 }

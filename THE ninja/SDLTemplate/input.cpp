@@ -61,6 +61,25 @@ void doInput(void)
 			STRNCPY(app.inputText, event.text.text, MAX_LINE_LENGTH);
 			break;
 
+		case SDL_MOUSEMOTION:
+			app.mouseX = event.motion.x;
+			app.mouseY = event.motion.y;
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button < 6)
+			{
+				app.mouseButtons[event.button.button] = 1;
+			}
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button < 6)
+			{
+				app.mouseButtons[event.button.button] = 0;
+			}
+			break;
+
 		default:
 			break;
 		}
