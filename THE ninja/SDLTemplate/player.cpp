@@ -7,6 +7,10 @@
 
 using namespace std;
 
+const int hbOffsetX = 12;
+const int hbOffsetY = 9;
+const int hbInsetX = 24;
+
 Player::~Player()
 {
 
@@ -39,6 +43,10 @@ void Player::start()
 	currentReloadTime = 0;
 	altcurrentReloadTime = 0; 
 
+	int hp[] = { 20, 40, 60, 80 };
+	maxHealth = hp[tier];
+	health = maxHealth;
+
 	// Query the texture to set our width and height
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	x = (SCREEN_WIDTH / 2) - (width / 2);
@@ -47,8 +55,25 @@ void Player::start()
 	onGround = false;
 }
 
+SDL_Rect Player::getHitBox()
+{
+	SDL_Rect player;
+
+	player.x = (int)x + hbOffsetX;
+	player.y = (int)y + hbOffsetY;
+	player.w = width - hbInsetX;
+	player.h = height - hbOffsetY;
+
+	return player;
+}
+
 void Player::update()
 {
+	if (tpCooldown > 0)
+	{
+		tpCooldown--;
+	}
+
 	if (currentReloadTime > 0)
 	{
 		currentReloadTime--;
@@ -135,11 +160,13 @@ void Player::update()
 
 	if (app.keyboard[SDL_SCANCODE_A]) 
 	{
+		texture = loadTexture("assets/player_left.png");
 		dx -= currentSpeed;
 	}
 
 	if (app.keyboard[SDL_SCANCODE_D]) 
 	{
+		texture = loadTexture("assets/player_right.png");
 		dx += currentSpeed;
 	}
 
@@ -160,40 +187,59 @@ void Player::update()
 		}
 	}
 
-	// ---- Jump ----
+	if (app.keyboard[SDL_SCANCODE_F] && tpCooldown <= 0)
+	{
+		x = app.mouseX - width / 2;
+		y = app.mouseY - height / 2;
+		velocityY = 0;
+		tpCooldown = 5;
+	}
+
 	if (app.keyboard[SDL_SCANCODE_SPACE] && onGround)
 	{
 		SoundManager::playSound(jump);
 		velocityY = -jumpStrength;
 	}
 
-	// ---- Gravity, then resolve ----
+	//what am i doin man
+	float prevBot = static_cast<float>(y + height);
 	velocityY += gravity;
-	if (velocityY > fallSpeed) velocityY = fallSpeed;
+
+	if (velocityY > fallSpeed) 
+	{
+		velocityY = fallSpeed;
+	}
+
 	y += velocityY;
 	onGround = false;
 
-	for (GameObject* obj : getScene()->getObjects())
-	{
-		platform* p = dynamic_cast<platform*>(obj);
-		if (p == nullptr || !overlaping(p)) continue;
+	float curBot = static_cast<float>(y + height);
+	SDL_Rect hb = getHitBox();
 
-		if (velocityY > 0)    
+	if(velocityY > 0)
+	{
+		for (GameObject* obj : getScene()->getObjects())
 		{
-			y = p->getY() - height;
-			velocityY = 0;
-			onGround = true;
-		}
-		else if (velocityY < 0) 
-		{
-			y = p->getY() + p->getHeight();
-			velocityY = 0;
+			platform* p = dynamic_cast<platform*>(obj);
+			if (p == nullptr)  continue;
+
+			bool overlapX = hb.x < p->getX() + p->getWidth() && hb.x + hb.w > p->getX();
+			if (!overlapX) continue;
+
+			float platformTop = static_cast<float>(p->getY());
+
+			if (prevBot <= platformTop && curBot >= platformTop)
+			{
+				y = static_cast<float>(platformTop) - height;
+				velocityY = 0.0f;
+				onGround = true;
+				break;
+			}
 		}
 	}
 
-	// ---- Screen bounds ----
-	if (x < 0) x = 0;
-	if (x > SCREEN_WIDTH - width) x = SCREEN_WIDTH - width;
+	if (x < - hbOffsetX) x = -hbInsetX;
+	if (x > SCREEN_WIDTH - width + (hbInsetX - hbOffsetX)) x = SCREEN_WIDTH - width + (hbInsetX - hbOffsetX) ;
 	if (y < 0) y = 0;
 	if (y > SCREEN_HEIGHT - height)
 	{
@@ -208,6 +254,17 @@ void Player::draw()
 	if (isAlive)
 	{
 		blit(texture, x, y);
+
+		int barWidth = width;
+		int filled = (int)((float)health / maxHealth * barWidth);
+
+		SDL_Rect back = { (int)x, (int)y - 12, barWidth, 6 };
+		SDL_Rect front = { (int)x, (int)y - 12, filled, 6 };
+
+		SDL_SetRenderDrawColor(app.renderer, 80, 0, 0, 255);
+		SDL_RenderFillRect(app.renderer, &back);
+		SDL_SetRenderDrawColor(app.renderer, 0, 128, 0, 255);
+		SDL_RenderFillRect(app.renderer, &front);
 	}
 }
 
@@ -221,18 +278,19 @@ void Player::getDead()
 	isAlive = false;
 }
 
-//void Player::getPowerUp(PowerUpType type)
-//{
-//	if (type == PowerUpType::SPEED)
-//	{
-//		speedBoostTimer = 600;
-//	}
-//	else if (type == PowerUpType::DOUBLE_SHOT)
-//	{
-//		doubleShotTimer = 900;
-//	}
-//	else if (type == PowerUpType::BURST)
-//	{
-//		burstTimer = 900;
-//	}
-//}
+bool Player::takeDamage(int amount)
+{
+	health -= amount;
+
+	if (health <= 0)
+	{
+		health = 0;
+		isAlive = false;
+		return true;
+	}
+
+	return false;
+}
+
+//i miss you unity
+

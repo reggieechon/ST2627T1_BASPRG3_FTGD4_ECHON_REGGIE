@@ -16,7 +16,11 @@ void projectile::start()
 
 	if (side == Side::ENEMY_SIDE)
 	{
-		texture = loadTexture("gfx/alienBullet.png");
+		texture = loadTexture("assets/enemy projectile.png");
+	}
+	else if (side == Side::BOSS_SIDE)
+	{
+		texture = loadTexture("assets/boss projectile.png");
 	}
 	else
 	{

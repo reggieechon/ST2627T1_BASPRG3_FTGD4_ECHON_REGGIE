@@ -285,7 +285,11 @@
             "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_mixer.h",
             "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
             "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
-            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\projectile.h"
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\projectile.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\enemy.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\util.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\math.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\boss.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

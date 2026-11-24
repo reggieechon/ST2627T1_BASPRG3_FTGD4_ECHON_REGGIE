@@ -1,7 +1,7 @@
 #pragma once
 
 #define STRNCPY(dest, src, n) strncpy(dest, src, n); dest[n - 1] = '\0'
-#define WINDOW_NAME				"THE ninja"
+#define WINDOW_NAME				"TERRARIA BOSS SIMULATOR"
 #define FPS                      60
 #define MAX_KEYBOARD_KEYS        350
 #define MAX_NAME_LENGTH          32

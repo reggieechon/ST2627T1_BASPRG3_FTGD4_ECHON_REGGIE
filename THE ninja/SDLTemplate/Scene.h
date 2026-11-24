@@ -24,8 +24,9 @@ public:
 	virtual void update();
 	virtual void draw();
 
-private:
+protected:
 	std::vector<GameObject*> objects;
+private:
 	bool hasStarted;
 	static Scene* activeScene;
 };

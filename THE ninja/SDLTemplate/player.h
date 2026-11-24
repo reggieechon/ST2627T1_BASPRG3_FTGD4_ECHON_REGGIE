@@ -11,10 +11,13 @@ class Player : public GameObject
 public:
 	~Player();
 	void start() override;
+	SDL_Rect getHitBox();
 	void update() override;
 	void draw() override;
 	bool getIsAlive();
 	void getDead();
+	bool takeDamage(int amount);
+
 
 private:
 	SDL_Texture* texture;
@@ -35,6 +38,10 @@ private:
 	int doubleShotTimer;
 	int burstTimer;
 	int burstCooldown;
+	int tier;
+	int health;
+	int maxHealth;
+	int tpCooldown = 0;
 
 	float reloadTime;
 	float altreloadTime;

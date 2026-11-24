@@ -1,0 +1,42 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_rect.h",
+        "ProvidedModule": "",
+        "Includes": [
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_stdinc.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_config.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_platform.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\shared\\winapifamily.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\shared\\winpackagefamily.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\shared\\sdkddkver.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\stddef.h",
+            "c:\\program files (x86)\\windows kits\\10\\include\\10.0.26100.0\\ucrt\\corecrt.h",
+            "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.52.37025\\include\\vcruntime.h",
+            "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.52.37025\\include\\sal.h",
+            "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.52.37025\\include\\concurrencysal.h",
+            "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.52.37025\\include\\vadefs.h",
+            "c:\\program files\\microsoft visual studio\\18\\community\\vc\\tools\\msvc\\14.52.37025\\include\\stdarg.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_error.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_pixels.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_endian.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\sdl_rwops.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\begin_code.h",
+            "c:\\users\\yuki\\documents\\github\\st2627t1_basprg3_ftgd4_echon_reggie\\the ninja\\sdltemplate\\include\\close_code.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
