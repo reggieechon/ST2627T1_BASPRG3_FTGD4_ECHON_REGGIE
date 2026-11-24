@@ -23,7 +23,10 @@ public:
 	static void playSound(Mix_Chunk* sound, int channel = -1);
 	static void loadMusic(const char* filename);
 	static void playMusic(int loop);
-	Mix_Music* music;
+	static void stopMusic();
+	static void setMusicVolume(int volume);
+	Mix_Chunk* musicChunk = NULL;
+	int musicChannel = 1;
 private:
 	std::vector<SoundClip> loadedSounds;
 

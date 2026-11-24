@@ -52,24 +52,55 @@ void SoundManager::playSound(Mix_Chunk* sound, int channel)
 
 void SoundManager::loadMusic(const char* filename)
 {
+	SoundManager* sm = getInstance();
 
-	if (getInstance()->music != NULL)
+	if (sm->musicChunk != NULL)
 	{
-		Mix_HaltMusic();
-		Mix_FreeMusic(getInstance()->music);
-		getInstance()->music = NULL;
+		Mix_HaltChannel(sm->musicChannel);
+		Mix_FreeChunk(sm->musicChunk);
+		sm->musicChunk = NULL;
+		sm->musicChannel = -1;
 	}
 
-	getInstance()->music = Mix_LoadMUS(filename);
+	sm->musicChunk = Mix_LoadWAV(filename);
+
+	if (sm->musicChunk == NULL)
+	{
+		std::cout << "Failed to load music: " << Mix_GetError() << std::endl;
+	}
 }
 
 void SoundManager::playMusic(int loop)
 {
-	if (getInstance()->music == NULL)
+	SoundManager* sm = getInstance();
+
+	if (sm->musicChunk == NULL)
 	{
 		std::cout << "Music is not loaded!" << std::endl;
+		return;
 	}
-	Mix_PlayMusic(getInstance()->music, (loop) ? -1 : 0);
+	sm->musicChannel = Mix_PlayChannel(-1, sm->musicChunk, loop ? -1 : 0);
+}
+
+void SoundManager::stopMusic()
+{
+	SoundManager* sm = getInstance();
+
+	if (sm->musicChannel != -1)
+	{
+		Mix_HaltChannel(sm->musicChannel);
+		sm->musicChannel = -1;
+	}
+}
+
+void SoundManager::setMusicVolume(int volume)
+{
+	SoundManager* sm = getInstance();
+
+	if (sm->musicChunk != NULL)
+	{
+		sm->musicChunk->volume = volume;
+	}
 }
 
 Mix_Chunk* SoundManager::getLoadedSound(const char* filename)

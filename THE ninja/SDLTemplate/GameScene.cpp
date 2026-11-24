@@ -92,6 +92,7 @@ GameScene::~GameScene()
 void GameScene::start()
 {
 	SoundManager::playMusic(1);
+	SoundManager::setMusicVolume(24);
 	Scene::start();
 	initFonts();
 	points = 0;
